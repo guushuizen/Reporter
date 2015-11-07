@@ -1,0 +1,9 @@
+permissions:
+  #Permission for opening /report GUI
+  open-gui: reporter.reporter-gui.open
+
+  #Permission for receiving reports (Mostly used by staff)
+  receive-reports: reporter.receive-reports
+
+ #Permission to open GUI with all reports (Mostly used by staff)
+  open-reports-gui: reporter.reports-gui.open

@@ -1,0 +1,7 @@
+main: me.iamguus.reporter.Main
+name: Reporter
+version: 1.0
+commands:
+  report:
+    usage: /<command>
+    description: Report a player with ease.

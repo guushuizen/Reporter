@@ -1,5 +1,8 @@
 package me.iamguus.reporter;
 
+import me.iamguus.reporter.commands.OpenReporterCommand;
+import me.iamguus.reporter.data.SettingsManager;
+import me.iamguus.reporter.listeners.ReporterListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -12,9 +15,19 @@ public class Main extends JavaPlugin {
 
     private static Plugin p;
 
+    SettingsManager settingsManager = SettingsManager.getInstance();
+
     public void onEnable() {
         this.p = this;
         Bukkit.getLogger().info("Plugin enabled successfully!");
+
+        saveDefaultConfig();
+
+        settingsManager.setup(p);
+
+        registerListeners(p, new ReporterListener());
+
+        getCommand("report").setExecutor(new OpenReporterCommand());
     }
 
     public void onDisable() {
