@@ -1,5 +1,6 @@
 package me.iamguus.reporter.gui;
 
+import me.iamguus.reporter.data.Report;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +23,27 @@ public class ReporterGUI {
     private static ReporterGUI instance;
 
     public Inventory getReporterGUI(int page) {
-        Inventory inv = Bukkit.createInventory(null, 54, (page == 1) ? "Report a player!" : "Report a player! (Page " + page + ")");
+        int size = Bukkit.getOnlinePlayers().size() - (45 * page);
+
+        int invSize = 54;
+
+        if (size < 9) {
+            invSize = 18;
+        } else
+        if (size < 9 && size > 18) {
+            invSize = 27;
+        } else
+        if (size < 18 && size > 27) {
+            invSize = 36;
+        } else
+        if (size < 27 && size > 36) {
+            invSize = 45;
+        } else
+        if (size < 36 && size > 45) {
+            invSize = 54;
+        }
+
+        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "Report a player!" : "Report a player! (Page " + page + ")");
 
         ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();
@@ -89,6 +110,33 @@ public class ReporterGUI {
     }
 
     public Inventory getSearchPlayersGUI(String search, int page) {
+        List<Player> matchingPlayers = new ArrayList<Player>();
+        for (Player loop : Bukkit.getOnlinePlayers()) {
+            if (loop.getName().contains(search)) {
+                matchingPlayers.add(loop);
+            }
+        }
+
+        int size = matchingPlayers.size() - (page * 45);
+
+        int invSize = 54;
+
+        if (size < 9) {
+            invSize = 18;
+        } else
+        if (size < 9 && size > 18) {
+            invSize = 27;
+        } else
+        if (size < 18 && size > 27) {
+            invSize = 36;
+        } else
+        if (size < 27 && size > 36) {
+            invSize = 45;
+        } else
+        if (size < 36 && size > 45) {
+            invSize = 54;
+        }
+
         Inventory inv = Bukkit.createInventory(null, 54, (page == 1) ? "Search a player!" : "Search a player! (Page " + page + ")");
 
         ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
@@ -105,13 +153,6 @@ public class ReporterGUI {
         inv.setItem(6, glass);
         inv.setItem(7, glass);
 
-        List<Player> matchingPlayers = new ArrayList<Player>();
-        for (Player loop : Bukkit.getOnlinePlayers()) {
-            if (loop.getName().contains(search)) {
-                matchingPlayers.add(loop);
-            }
-        }
-
         if (page != 1) {
             ItemStack previousPage = new ItemStack(Material.SUGAR_CANE);
             ItemMeta previousMeta = previousPage.getItemMeta();
@@ -123,7 +164,7 @@ public class ReporterGUI {
             inv.setItem(0, glass);
         }
 
-        if (page * 45 > matchingPlayers.size()) {
+        if (page * 45 < matchingPlayers.size()) {
             ItemStack nextPage = new ItemStack(Material.SUGAR_CANE);
             ItemMeta nextMeta = nextPage.getItemMeta();
             nextMeta.setDisplayName(ChatColor.GREEN + "Next Page >");
@@ -161,7 +202,75 @@ public class ReporterGUI {
         return inv;
     }
 
+    public Inventory getAgreeGUI(ItemStack skull, String reason) {
+        Inventory inv = Bukkit.createInventory(null, 54, "Are you sure?");
 
+        ItemStack backgroundGlass = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta backgroundMeta = backgroundGlass.getItemMeta();
+        backgroundGlass.setDurability((short) 3);
+        backgroundMeta.setDisplayName(" ");
+        backgroundGlass.setItemMeta(backgroundMeta);
+
+        for (int i = 0; i < 4; i++) {
+            inv.setItem(i, backgroundGlass);
+        }
+
+        for (int i = 5; i < 9; i++) {
+            inv.setItem(i, backgroundGlass);
+        }
+
+        inv.setItem(4, skull);
+
+        ItemStack green = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta greenMeta = green.getItemMeta();
+        green.setDurability((short) 5);
+        greenMeta.setDisplayName(ChatColor.GREEN + "Yes!");
+        greenMeta.setLore(Arrays.asList(ChatColor.GRAY + "Yes, I do want to report", ChatColor.GRAY + ((SkullMeta)skull.getItemMeta()).getOwner() + " for " + reason));
+        green.setItemMeta(greenMeta);
+
+        inv.setItem(18, green);
+        inv.setItem(27, green);
+        inv.setItem(36, green);
+        inv.setItem(45, green);
+        inv.setItem(19, green);
+        inv.setItem(28, green);
+        inv.setItem(37, green);
+        inv.setItem(46, green);
+        inv.setItem(20, green);
+        inv.setItem(29, green);
+        inv.setItem(38, green);
+        inv.setItem(47, green);
+        inv.setItem(21, green);
+        inv.setItem(30, green);
+        inv.setItem(39, green);
+        inv.setItem(48, green);
+
+        ItemStack red = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta redMeta = green.getItemMeta();
+        red.setDurability((short) 14);
+        redMeta.setDisplayName(ChatColor.RED + "No!");
+        redMeta.setLore(Arrays.asList(ChatColor.GRAY + "No, I don't want to report", ChatColor.GRAY + ((SkullMeta)skull.getItemMeta()).getOwner() + " for " + reason));
+        red.setItemMeta(redMeta);
+
+        inv.setItem(23, red);
+        inv.setItem(32, red);
+        inv.setItem(41, red);
+        inv.setItem(50, red);
+        inv.setItem(24, red);
+        inv.setItem(33, red);
+        inv.setItem(42, red);
+        inv.setItem(51, red);
+        inv.setItem(25, red);
+        inv.setItem(34, red);
+        inv.setItem(43, red);
+        inv.setItem(52, red);
+        inv.setItem(26, red);
+        inv.setItem(35, red);
+        inv.setItem(44, red);
+        inv.setItem(53, red);
+
+        return inv;
+    }
 
     public static ReporterGUI get() {
         if (instance == null) {

@@ -19,13 +19,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ReporterListener implements Listener {
 
     @EventHandler
-    public void onInvClick(InventoryClickEvent event) {
+    public void onInvClick(final InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
             if (event.getInventory().getTitle().contains(ReporterGUI.get().getReporterGUI(1).getTitle())) {
                 event.setCancelled(true);
                 if (event.getSlotType() != InventoryType.SlotType.OUTSIDE) {
-                    ItemStack currentItem = event.getCurrentItem();
+                    final ItemStack currentItem = event.getCurrentItem();
                     if (currentItem.getType() == Material.SKULL_ITEM) {
                         SkullMeta skullMeta = (SkullMeta) currentItem.getItemMeta();
                         AnvilGUI anvilGUI = new AnvilGUI(player, new AnvilGUI.AnvilClickEventHandler() {
@@ -35,7 +35,11 @@ public class ReporterListener implements Listener {
                                     event.setWillClose(true);
                                     event.setWillDestroy(true);
 
-
+                                    new BukkitRunnable() {
+                                        public void run() {
+                                            player.openInventory(ReporterGUI.get().getAgreeGUI(currentItem, event.getName()));
+                                        }
+                                    }.runTaskLater(Main.getPlugin(), 1L);
                                 }
                             }
                         });
