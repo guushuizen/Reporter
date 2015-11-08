@@ -1,6 +1,7 @@
 package me.iamguus.reporter;
 
 import me.iamguus.reporter.commands.OpenReporterCommand;
+import me.iamguus.reporter.commands.ViewReportCommand;
 import me.iamguus.reporter.data.SettingsManager;
 import me.iamguus.reporter.listeners.ReporterListener;
 import org.bukkit.Bukkit;
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
         registerListeners(p, new ReporterListener());
 
         getCommand("report").setExecutor(new OpenReporterCommand());
+        getCommand("viewreport").setExecutor(new ViewReportCommand());
     }
 
     public void onDisable() {

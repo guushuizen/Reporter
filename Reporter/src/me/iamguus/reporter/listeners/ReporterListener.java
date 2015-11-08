@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,7 +59,7 @@ public class ReporterListener implements Listener {
                             }
                         });
 
-                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, new ItemStack(Material.NAME_TAG));
+                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Why ban " + skullMeta.getOwner() + "?"));
 
                         anvilGUI.open();
                     } else
@@ -104,14 +105,17 @@ public class ReporterListener implements Listener {
                                         public void run() {
                                             reasons.put(skullMeta.getOwner(), event.getName());
                                             reports.put(player.getUniqueId(), skullMeta.getOwner());
+                                            skullMeta.setLore(null);
+                                            currentItem.setItemMeta(skullMeta);
                                             player.openInventory(ReporterGUI.get().getAgreeGUI(currentItem, event.getName()));
+                                            player.closeInventory();
                                         }
                                     }.runTaskLater(Main.getPlugin(), 1L);
                                 }
                             }
                         });
 
-                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, new ItemStack(Material.NAME_TAG));
+                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Who are you searching?"));
 
                         anvilGUI.open();
                     } else
@@ -168,5 +172,13 @@ public class ReporterListener implements Listener {
                 }
             }
         }
+    }
+
+    private ItemStack createItemStackWithName(Material mat, String name) {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta im = item.getItemMeta();
+        im.setDisplayName(name);
+        item.setItemMeta(im);
+        return item;
     }
 }

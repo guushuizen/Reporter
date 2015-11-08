@@ -19,7 +19,7 @@ public class Report {
     private String reason;
 
     public Report(UUID reported, UUID reporter, String reason) {
-        this.ID = settingsManager.getReports().getConfigurationSection("reports").getKeys(false).size() + 1;
+        this.ID = (settingsManager.getReports().getConfigurationSection("reports") == null) ? 1 : settingsManager.getReports().getConfigurationSection("reports").getKeys(false).size() + 1;
         this.reported = reported;
         this.reporter = reporter;
         this.reason = reason;
@@ -40,14 +40,15 @@ public class Report {
 
     public void saveToConfig() {
         FileConfiguration configuration = settingsManager.getReports();
-        configuration.set("reports." + this.ID + ".reported", reported);
-        configuration.set("reports." + this.ID + ".reporter", reporter);
+        configuration.set("reports." + this.ID + ".reported", reported.toString());
+        configuration.set("reports." + this.ID + ".reporter", reporter.toString());
         configuration.set("reports." + this.ID + ".reason", reason);
         settingsManager.saveReports();
     }
 
     public static Report loadReportFromConfig(ConfigurationSection section) {
-        int id = Integer.parseInt(section.getCurrentPath().split(".")[1]);
+        System.out.println(section.getCurrentPath());
+        int id = Integer.parseInt(section.getCurrentPath().split("\\.")[1]);
         UUID reported = UUID.fromString(section.getString("reported"));
         UUID reporter = UUID.fromString(section.getString("reporter"));
         String reason = section.getString("reason");

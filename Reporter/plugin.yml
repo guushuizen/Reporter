@@ -5,3 +5,7 @@ commands:
   report:
     usage: /<command>
     description: Report a player with ease.
+  viewreport:
+    usage: /<command>
+    description: View a report with ease.
+    

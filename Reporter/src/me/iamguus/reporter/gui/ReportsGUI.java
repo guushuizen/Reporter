@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.Arrays;
+
 /**
  * Created by Guus on 8-11-2015.
  */
@@ -18,7 +20,7 @@ public class ReportsGUI {
     private static ReportsGUI instance;
 
     public Inventory getViewReport(Report report) {
-        Inventory inv = Bukkit.createInventory(null, 54, "Report #" + report.getID() + " " + Bukkit.getPlayer(report.getReported()).getName());
+        Inventory inv = Bukkit.createInventory(null, 54, "Report #" + report.getID() + ": " + Bukkit.getPlayer(report.getReported()).getName());
 
         Player reportedPlayer = Bukkit.getPlayer(report.getReported());
         Player reporterPlayer = Bukkit.getPlayer(report.getReporter());
@@ -66,6 +68,30 @@ public class ReportsGUI {
         reasonMeta.setDisplayName(ChatColor.GREEN + "for " + reasonString);
         reason.setItemMeta(reasonMeta);
         inv.setItem(15, reason);
+
+        ItemStack ban = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta banMeta = ban.getItemMeta();
+        ban.setDurability((short) 14);
+        banMeta.setDisplayName(ChatColor.RED + "Ban " + reportedPlayer.getName() + "");
+        banMeta.setLore(Arrays.asList(ChatColor.GRAY + "for " + reasonString));
+        ban.setItemMeta(banMeta);
+        inv.setItem(38, ban);
+
+        ItemStack customBan = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta customMeta = customBan.getItemMeta();
+        customBan.setDurability((short) 11);
+        customMeta.setDisplayName(ChatColor.BLUE + "Ban " + reportedPlayer.getName());
+        customMeta.setLore(Arrays.asList(ChatColor.GRAY + "Fill in a custom reason for banning " + reportedPlayer.getName()));
+        customBan.setItemMeta(customMeta);
+        inv.setItem(40, customBan);
+
+        ItemStack teleport = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta teleMeta = teleport.getItemMeta();
+        teleport.setDurability((short) 5);
+        teleMeta.setDisplayName(ChatColor.GREEN + "Teleport to " + reportedPlayer.getName());
+        teleMeta.setLore(Arrays.asList(ChatColor.GRAY + "Teleport to " + reportedPlayer.getName() + " and check", ChatColor.GRAY + "if he/she is hacking or not."));
+        teleport.setItemMeta(teleMeta);
+        inv.setItem(42, teleport);
 
         return inv;
     }
