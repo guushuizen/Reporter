@@ -161,6 +161,8 @@ public class ReporterGUI {
         return inv;
     }
 
+
+
     public static ReporterGUI get() {
         if (instance == null) {
             instance = new ReporterGUI();

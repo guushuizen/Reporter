@@ -24,11 +24,25 @@ public class SettingsManager {
     FileConfiguration config;
     File cfile;
 
+    FileConfiguration reports;
+    File rfile;
+
     public void setup(Plugin p) {
         config = p.getConfig();
         config.options().copyDefaults(true);
         cfile = new File(p.getDataFolder(), "config.yml");
         saveConfig();
+
+        rfile = new File(p.getDataFolder(), "reports.yml");
+        if (!(rfile.exists())) {
+            try {
+                rfile.createNewFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        reports = YamlConfiguration.loadConfiguration(rfile);
     }
 
     public FileConfiguration getConfig() {
@@ -46,6 +60,16 @@ public class SettingsManager {
 
     public void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(cfile);
+    }
+
+    public FileConfiguration getReports() { return reports; }
+
+    public void saveReports() {
+        try {
+            reports.save(rfile);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public PluginDescriptionFile getDesc() {
