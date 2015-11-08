@@ -82,7 +82,7 @@ public class ReporterListener implements Listener {
                             }
                         });
 
-                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, new ItemStack(Material.NAME_TAG));
+                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Who are you searching?"));
 
                         anvilGUI.open();
                     }
@@ -115,7 +115,7 @@ public class ReporterListener implements Listener {
                             }
                         });
 
-                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Who are you searching?"));
+                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Why report " + skullMeta.getOwner() + "?"));
 
                         anvilGUI.open();
                     } else
@@ -138,7 +138,7 @@ public class ReporterListener implements Listener {
                             }
                         });
 
-                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, new ItemStack(Material.NAME_TAG));
+                        anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Who are you searching?"));
 
                         anvilGUI.open();
                     }
