@@ -137,7 +137,7 @@ public class ReporterGUI {
             invSize = 54;
         }
 
-        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "Search a player!" : "Search a player! (Page " + page + ")");
+        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "Search a player!" : "Search a player! (Page #" + page + ")");
 
         ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();

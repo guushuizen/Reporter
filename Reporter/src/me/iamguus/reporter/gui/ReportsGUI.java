@@ -1,6 +1,7 @@
 package me.iamguus.reporter.gui;
 
 import me.iamguus.reporter.data.Report;
+import me.iamguus.reporter.data.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,7 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Guus on 8-11-2015.
@@ -18,6 +21,63 @@ import java.util.Arrays;
 public class ReportsGUI {
 
     private static ReportsGUI instance;
+
+    private SettingsManager settingsManager = SettingsManager.getInstance();
+
+    public Inventory getReportList(int page) {
+        List<Report> allReports = new ArrayList<Report>();
+        for (String s : settingsManager.getReports().getConfigurationSection("reports").getKeys(false)) {
+            allReports.add(Report.loadReportFromConfig(settingsManager.getReports().getConfigurationSection("reports." + s)));
+        }
+
+        int size = allReports.size();
+        int invSize = 54;
+
+        if (size < 9) {
+            invSize = 18;
+        } else
+        if (size < 9 && size > 18) {
+            invSize = 27;
+        } else
+        if (size < 18 && size > 27) {
+            invSize = 36;
+        } else
+        if (size < 27 && size > 36) {
+            invSize = 45;
+        } else
+        if (size < 36 && size > 45) {
+            invSize = 54;
+        }
+
+        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "All Reports" : "All Reports (Page #" + page + ")");
+
+        ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
+        ItemMeta glassMeta = glass.getItemMeta();
+        glass.setDurability((short) 3);
+        glassMeta.setDisplayName(" ");
+        glass.setItemMeta(glassMeta);
+
+        inv.setItem(1, glass);
+        inv.setItem(2, glass);
+        inv.setItem(3, glass);
+
+        inv.setItem(5, glass);
+        inv.setItem(6, glass);
+        inv.setItem(7, glass);
+
+        if (page != 1) {
+            ItemStack previousPage = new ItemStack(Material.SUGAR_CANE);
+            ItemMeta previousMeta = previousPage.getItemMeta();
+            previousMeta.setDisplayName(ChatColor.GREEN + "< Previous page");
+            previousMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to go to the previous page."));
+            previousPage.setItemMeta(previousMeta);
+            inv.setItem(0, previousPage);
+        } else {
+            inv.setItem(0, glass);
+        }
+
+        return inv;
+    }
 
     public Inventory getViewReport(Report report) {
         Inventory inv = Bukkit.createInventory(null, 54, "Report #" + report.getID() + ": " + Bukkit.getPlayer(report.getReported()).getName());
