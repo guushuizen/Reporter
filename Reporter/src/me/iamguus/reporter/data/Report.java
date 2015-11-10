@@ -47,7 +47,6 @@ public class Report {
     }
 
     public static Report loadReportFromConfig(ConfigurationSection section) {
-        System.out.println(section.getCurrentPath());
         int id = Integer.parseInt(section.getCurrentPath().split("\\.")[1]);
         UUID reported = UUID.fromString(section.getString("reported"));
         UUID reporter = UUID.fromString(section.getString("reporter"));

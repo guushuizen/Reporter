@@ -1,9 +1,11 @@
 package me.iamguus.reporter;
 
 import me.iamguus.reporter.commands.OpenReporterCommand;
+import me.iamguus.reporter.commands.ReportsCommand;
 import me.iamguus.reporter.commands.ViewReportCommand;
 import me.iamguus.reporter.data.SettingsManager;
 import me.iamguus.reporter.listeners.ReporterListener;
+import me.iamguus.reporter.listeners.ReportsListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -26,10 +28,11 @@ public class Main extends JavaPlugin {
 
         settingsManager.setup(p);
 
-        registerListeners(p, new ReporterListener());
+        registerListeners(p, new ReporterListener(), new ReportsListener());
 
         getCommand("report").setExecutor(new OpenReporterCommand());
         getCommand("viewreport").setExecutor(new ViewReportCommand());
+        getCommand("reports").setExecutor(new ReportsCommand());
     }
 
     public void onDisable() {

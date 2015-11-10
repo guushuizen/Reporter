@@ -8,4 +8,6 @@ commands:
   viewreport:
     usage: /<command>
     description: View a report with ease.
-    
+  reports:
+    usage: /<command>
+    description: View all reports with ease.  

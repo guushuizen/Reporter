@@ -23,27 +23,45 @@ public class ReporterGUI {
     private static ReporterGUI instance;
 
     public Inventory getReporterGUI(int page) {
-        int size = Bukkit.getOnlinePlayers().size() - (45 * page);
+//        System.out.println((Bukkit.getOnlinePlayers().size() - (45 * page)));
+
+        List<Player> onlinePlayers = new ArrayList<Player>(Bukkit.getOnlinePlayers());
+
+
+        List<Player> playersToList = new ArrayList<Player>();
+
+        int begin = page * 45;
+        int end = (page * 45) + 45;
+
+        for (int i = begin; i < end; i++) {
+            //  54> 65
+            if (i < onlinePlayers.size()) {
+                playersToList.add(onlinePlayers.get(i));
+            }
+        }
+
+        int size =  playersToList.size();
 
         int invSize = 54;
 
         if (size < 9) {
             invSize = 18;
         } else
-        if (size < 9 && size > 18) {
+        if (size > 9 && size < 18) {
             invSize = 27;
         } else
-        if (size < 18 && size > 27) {
+        if (size > 18 && size < 27) {
             invSize = 36;
         } else
-        if (size < 27 && size > 36) {
+        if (size > 27 && size < 36) {
             invSize = 45;
         } else
-        if (size < 36 && size > 45) {
+        if (size > 36 && size < 45) {
             invSize = 54;
         }
 
-        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "Report a player!" : "Report a player! (Page " + page + ")");
+
+        Inventory inv = Bukkit.createInventory(null, invSize, "Report a player! (Page #" + (page + 1) + ")");
 
         ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();
@@ -59,7 +77,7 @@ public class ReporterGUI {
         inv.setItem(6, glass);
         inv.setItem(7, glass);
 
-        if (page != 1) {
+        if (page > 0) {
             ItemStack previousPage = new ItemStack(Material.SUGAR_CANE);
             ItemMeta previousMeta = previousPage.getItemMeta();
             previousMeta.setDisplayName(ChatColor.GREEN + "< Previous page");
@@ -88,23 +106,32 @@ public class ReporterGUI {
         search.setItemMeta(searchMeta);
         inv.setItem(4, search);
 
-        int begin = page * 45;
-        int end = (page * 45) + 45;
-        ArrayList<Player> onlinePlayers = new ArrayList<Player>(Bukkit.getOnlinePlayers());
+
+
 
         for (int i = begin; i < end; i++) {
             if (i - (45 * page) < onlinePlayers.size()) {
-                Player loopPlayer = onlinePlayers.get(i - (45 * page));
-                ItemStack head = new ItemStack(Material.SKULL_ITEM);
-                SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-                head.setDurability((short) 3);
-                headMeta.setOwner(loopPlayer.getName());
-                headMeta.setDisplayName(ChatColor.GOLD + "Report " + loopPlayer.getName());
-                headMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to report this player."));
-                head.setItemMeta(headMeta);
-                inv.setItem((i - (page * 45)) + 9, head);
+//                System.out.println(i);
+                if (i - (45 * page) < playersToList.size()) {
+                    Player loopPlayer = playersToList.get(i - (45 * page));
+                    ItemStack head = new ItemStack(Material.SKULL_ITEM);
+                    SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+                    head.setDurability((short) 3);
+                    headMeta.setOwner(loopPlayer.getName());
+                    headMeta.setDisplayName(ChatColor.GOLD + "Report " + loopPlayer.getName());
+                    headMeta.setLore(Arrays.asList(ChatColor.GRAY + "Click here to report this player."));
+                    head.setItemMeta(headMeta);
+                    //           45   -   90     +  9 =
+                    inv.setItem((i - (page * 45)) + 9, head);
+                    if (inv.getSize() == i - (45 * page)) {
+                        break;
+                    }
+                }
+//                System.out.println("After 1");
             }
+//            System.out.println("After 2");
         }
+//        System.out.println("After 3");
 
         return inv;
     }
@@ -137,7 +164,7 @@ public class ReporterGUI {
             invSize = 54;
         }
 
-        Inventory inv = Bukkit.createInventory(null, invSize, (page == 1) ? "Search a player!" : "Search a player! (Page #" + page + ")");
+        Inventory inv = Bukkit.createInventory(null, invSize, "Search a player! (Page #" + page + ")");
 
         ItemStack glass = new ItemStack(Material.STAINED_GLASS_PANE);
         ItemMeta glassMeta = glass.getItemMeta();

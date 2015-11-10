@@ -35,7 +35,7 @@ public class ReporterListener implements Listener {
     public void onInvClick(final InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            if (event.getInventory().getTitle().contains(ReporterGUI.get().getReporterGUI(1).getTitle())) {
+            if (event.getInventory().getTitle().contains("Report a player!")) {
                 event.setCancelled(true);
                 if (event.getSlotType() != InventoryType.SlotType.OUTSIDE) {
                     final ItemStack currentItem = event.getCurrentItem();
@@ -85,6 +85,25 @@ public class ReporterListener implements Listener {
                         anvilGUI.setSlot(AnvilGUI.AnvilSlot.INPUT_LEFT, createItemStackWithName(Material.NAME_TAG, "Who are you searching?"));
 
                         anvilGUI.open();
+                    } else
+                    if (currentItem.getType() == Material.SUGAR_CANE) {
+                        int page = Integer.parseInt(event.getInventory().getTitle().split("#")[1].split("\\)")[0]) - 1;
+                        if (currentItem.getItemMeta().getDisplayName().contains("Next")) {
+                            player.closeInventory();
+                            new BukkitRunnable() {
+                                public void run() {
+                                    player.openInventory(ReporterGUI.get().getReporterGUI(page + 1));
+                                }
+                            }.runTaskLater(Main.getPlugin(), 1L);
+                        } else
+                        if (currentItem.getItemMeta().getDisplayName().contains("Previous")) {
+                            player.closeInventory();
+                            new BukkitRunnable() {
+                                public void run() {
+                                    player.openInventory(ReporterGUI.get().getReporterGUI(page - 1));
+                                }
+                            }.runTaskLater(Main.getPlugin(), 1L);
+                        }
                     }
                 }
             } else
@@ -150,6 +169,7 @@ public class ReporterListener implements Listener {
                     ItemStack currentItem = event.getCurrentItem();
                     if (currentItem.getType() == Material.STAINED_GLASS_PANE) {
                         if (currentItem.getDurability() == (short) 5) { // YES
+                            player.closeInventory();
                             String toReport = reports.get(player.getUniqueId());
                             String reason = reasons.get(toReport);
                             Player playerReport = Bukkit.getPlayer(toReport);

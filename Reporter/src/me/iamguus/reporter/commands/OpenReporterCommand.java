@@ -26,7 +26,7 @@ public class OpenReporterCommand implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("report")) {
             if (player.hasPermission(config.getString("permissions.open-gui"))) {
-                player.openInventory(ReporterGUI.get().getReporterGUI(1));
+                player.openInventory(ReporterGUI.get().getReporterGUI(0));
                 return true;
             } else {
                 player.sendMessage(ChatColor.RED + "You do not have the right permissions to use this command!");
